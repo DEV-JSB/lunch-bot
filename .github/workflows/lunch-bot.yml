@@ -1,0 +1,29 @@
+name: 구내식당 메뉴 알림
+
+on:
+  schedule:
+    # UTC 기준. 02:30 UTC = KST 11:30
+    - cron: "30 2 * * 1-5"
+  workflow_dispatch: # 수동 실행 버튼
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # 이전에 보낸 이미지 해시를 캐시에 보관 -> 중복 전송 방지
+      - uses: actions/cache@v4
+        with:
+          path: .last_menu
+          key: last-menu-${{ github.run_id }}
+          restore-keys: last-menu-
+
+      - name: Run
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python lunch_bot.py
