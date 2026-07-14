@@ -1,9 +1,6 @@
 name: 구내식당 메뉴 알림
 
 on:
-  schedule:
-    - cron: "30 2 * * 1-5"      # 본 스케줄 (KST 11:30)
-    - cron: "*/10 * * * *"      # 테스트: 10분마다
   workflow_dispatch:
 
 jobs:
